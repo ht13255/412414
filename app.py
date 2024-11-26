@@ -19,21 +19,26 @@ start_crawl = st.button("크롤링 시작")
 def fetch_player_profiles(position, max_age):
     st.info("크롤링을 시작합니다. 잠시만 기다려주세요...")
 
-    # ChromeDriver 설정
+    # ChromeDriver 설정 (헤드리스 모드)
     chrome_options = Options()
-    chrome_options.add_argument("--headless")
-    chrome_options.add_argument("--disable-gpu")
-    chrome_options.add_argument("--no-sandbox")
-    
-    # WebDriver 실행
-    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
+    chrome_options.add_argument("--headless")  # UI 없이 실행
+    chrome_options.add_argument("--no-sandbox")  # 샌드박스 문제 방지
+    chrome_options.add_argument("--disable-dev-shm-usage")  # 메모리 문제 방지
+    chrome_options.add_argument("--disable-gpu")  # GPU 사용 안함
+    chrome_options.add_argument("--remote-debugging-port=9222")  # 디버깅 포트 설정
+
+    # WebDriverManager를 사용하여 ChromeDriver 자동 설치
+    driver = webdriver.Chrome(
+        service=Service(ChromeDriverManager().install()),
+        options=chrome_options
+    )
     
     try:
         # Sofascore 페이지 열기
         url = "https://www.sofascore.com"
         driver.get(url)
         time.sleep(5)  # 페이지 로드 대기
-        
+
         # 크롤링 로직 (예: 선수 정보 가져오기 - 위치는 Sofascore의 구조에 따라 수정 필요)
         players_data = []
         for i in range(1, 11):  # 예: 첫 10개의 선수만
