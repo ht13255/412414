@@ -5,6 +5,7 @@ from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
 import pandas as pd
 import time
+import os
 
 # Streamlit UI 시작
 st.title("유망한 21세 이하 축구 선수 크롤러")
@@ -27,12 +28,15 @@ def fetch_player_profiles(position, max_age):
     chrome_options.add_argument("--disable-gpu")  # GPU 사용 안함
     chrome_options.add_argument("--remote-debugging-port=9222")  # 디버깅 포트 설정
 
-    # WebDriverManager를 사용하여 ChromeDriver 자동 설치
+    # WebDriverManager로 경로를 자동으로 설정하는 대신, chromedriver 경로를 직접 지정
+    chromedriver_path = "/usr/local/bin/chromedriver"  # 예시로 경로를 지정, 실제 경로 확인 필요
+
+    # ChromeDriver 경로를 명시적으로 지정하여 WebDriver 실행
     driver = webdriver.Chrome(
-        service=Service(ChromeDriverManager().install()),
+        service=Service(chromedriver_path),  # chromedriver 경로를 명시적으로 설정
         options=chrome_options
     )
-    
+
     try:
         # Sofascore 페이지 열기
         url = "https://www.sofascore.com"
