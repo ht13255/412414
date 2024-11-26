@@ -1,0 +1,7 @@
+selenium
+pandas
+numpy
+scikit-learn
+openpyxl
+schedule
+webdriver-manager
