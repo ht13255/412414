@@ -5,6 +5,7 @@ from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
 import pandas as pd
 import time
+from pyvirtualdisplay import Display  # Xvfb 사용을 위한 모듈
 
 # Streamlit UI 시작
 st.title("유망한 21세 이하 축구 선수 크롤러")
@@ -18,6 +19,10 @@ start_crawl = st.button("크롤링 시작")
 # 크롤링 함수
 def fetch_player_profiles(position, max_age):
     st.info("크롤링을 시작합니다. 잠시만 기다려주세요...")
+
+    # Xvfb 디스플레이 설정 (GUI 없이 실행)
+    display = Display(visible=0, size=(1024, 768))  # Xvfb 설정
+    display.start()
 
     # ChromeDriver 설정 (헤드리스 모드)
     chrome_options = Options()
@@ -61,6 +66,7 @@ def fetch_player_profiles(position, max_age):
         return pd.DataFrame(players_data)
     finally:
         driver.quit()
+        display.stop()  # Xvfb 종료
 
 # 버튼이 눌렸을 때 크롤링 실행
 if start_crawl and position:
